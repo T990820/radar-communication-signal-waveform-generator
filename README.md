@@ -1,2 +1,2 @@
-# radar-communication-signal-waveform-generator
-本仓库的代码用于雷达/通信信号波形的仿真与时频分析
+# 雷达/通信信号波形发生器
+&emsp&emsp本仓库的代码用于雷达/通信信号波形的仿真与时频分析，各个函数的用法如下所示。
