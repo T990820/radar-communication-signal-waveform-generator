@@ -55,4 +55,4 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 ### Samples
 &emsp;&emsp;Samples是一个长度为23的向量，其中的每个元素代表一种调制方式每dB信噪比下生成的样本个数。Samples中23个分量与实际调制信号的对应关系与Modulations的一致。
 ### SNR
-&emsp;&emsp;数据集中包含的信噪比数组，一般用于信噪比非均匀采样的情况下，比如[-14 -12 -10 -6 -4 -2 0 2]
+&emsp;&emsp;数据集中包含的信噪比数组，一般用于信噪比非均匀采样的情况下，比如SNR=[-14 -12 -10 -6 -4 -2 0 2]
