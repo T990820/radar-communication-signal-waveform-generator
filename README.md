@@ -19,7 +19,6 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | 5 | 为噪声估计网络的训练集生成时域信号 |
 ### Modulations
 &emsp;&emsp;Modulations是一个长度为23的向量，其中的每个元素代表一种调制方式，1表示生成该种调制方式的信号，0表示不生成该种调制方式的信号。
-|:---------:|:---------:|
 | Modulations(1) | 单音信号(NS) |
 | Modulations(2) | 偶二次调频信号(EQFM) |
 | Modulations(3) | 线性调频信号(LFM) |
