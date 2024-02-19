@@ -44,7 +44,13 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | Modulations(21) | 下变频后的多进制幅移键控信号(DDC-MASK) |
 | Modulations(22) | 下变频后的多进制相移键控信号(DDC-MPSK) |
 | Modulations(23) | 下变频后的多进制频移键控信号(DDC-MFSK) |
+### SignalType
+&emsp;&emsp;SignalType=1表示生成实信号，SignalType=2表示生成复指数信号
 ### SNRmin
 &emsp;&emsp;信噪比的最小值
 ### SNRmax
 &emsp;&emsp;信噪比的最大值
+### SNRstep
+&emsp;&emsp;信噪比的步进
+### Samples
+&emsp;&emsp;Samples是一个长度为23的向量，其中的每个元素代表一种调制方式每dB信噪比下生成的样本个数。Samples中23个分量与实际调制信号的对应关系与Modulations的一致。
