@@ -8,7 +8,7 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 ```
 各个参数的实际含义如下所示。
 ### Mode
-| Mode | 意义 |
+| __Mode__ | __意义__ |
 |:---------:|:---------:|
 | 1 | 为时频图像识别网络的训练集生成时域信号，并将每个类的样本存到单独的文件夹里 |
 | 1.1 | 为时频图像识别网络的训练集生成时域信号，并将所有样本存到一个文件夹里，样本文件命名为'BPSK_0005.mat' |
@@ -17,7 +17,6 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | 3 | 为时频图像去噪网络的训练集生成时域信号 |
 | 4 | 为时频图像去噪网络的测试集生成时域信号 |
 | 5 | 为噪声估计网络的训练集生成时域信号 |
-|:---------:|:---------|
 ### Modulations
 &emsp;&emsp;Modulations是一个长度为23的向量，其中的每个元素代表一种调制方式，1表示生成，0表示不生成。
 Modulations(1)|单音信号
