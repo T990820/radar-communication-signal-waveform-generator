@@ -39,6 +39,11 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | Modulations(16) | T2多时编码信号(T2) |
 | Modulations(17) | T3多时编码信号(T3) |
 | Modulations(18) | T4多时编码信号(T4) |
+| Modulations(19) | LFM与SFM混合调制信号(LFM-SFM) |
+| Modulations(20) | EQFM与SFM混合调制信号(EQFM-SFM) |
+| Modulations(21) | 下变频后的多进制幅移键控信号(DDC-MASK) |
+| Modulations(22) | 下变频后的多进制相移键控信号(DDC-MPSK) |
+| Modulations(23) | 下变频后的多进制频移键控信号(DDC-MFSK) |
 ### SNRmin
 &emsp;&emsp;信噪比的最小值
 ### SNRmax
