@@ -19,9 +19,17 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | 5 | 为噪声估计网络的训练集生成时域信号 |
 ### Modulations
 &emsp;&emsp;Modulations是一个长度为23的向量，其中的每个元素代表一种调制方式，1表示生成该种调制方式的信号，0表示不生成该种调制方式的信号。
+| __Modulations分量__ | __意义__ |
+|:---------:|:---------:|
 | Modulations(1) | 单音信号(NS) |
 | Modulations(2) | 偶二次调频信号(EQFM) |
 | Modulations(3) | 线性调频信号(LFM) |
+| Modulations(4) | 二进制相移键控信号(BPSK) |
+| Modulations(5) | 四进制相移键控信号(QPSK) |
+| Modulations(6) | 二进制频移键控信号(QFSK) |
+| Modulations(7) | 正弦调频信号(SFM) |
+| Modulations(8) | COSTAS |
+| Modulations(9) | 正切调频信号(TANFM) |
 ### SNRmin
 &emsp;&emsp;信噪比的最小值
 ### SNRmax
