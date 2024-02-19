@@ -30,6 +30,15 @@ getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
 | Modulations(7) | 正弦调频信号(SFM) |
 | Modulations(8) | COSTAS |
 | Modulations(9) | 正切调频信号(TANFM) |
+| Modulations(10) | FRANK多相编码信号(FRANK) |
+| Modulations(11) | P1多相编码信号(P1) |
+| Modulations(12) | P1多相编码信号(P2) |
+| Modulations(13) | P1多相编码信号(P3) |
+| Modulations(14) | P1多相编码信号(P4) |
+| Modulations(15) | T1多时编码信号(T1) |
+| Modulations(16) | T2多时编码信号(T2) |
+| Modulations(17) | T3多时编码信号(T3) |
+| Modulations(18) | T4多时编码信号(T4) |
 ### SNRmin
 &emsp;&emsp;信噪比的最小值
 ### SNRmax
