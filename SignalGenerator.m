@@ -13,7 +13,6 @@ classdef SignalGenerator
             obj.V         = V;         % 信号电平
             obj.Points    = n;         % 默认采样点数
             obj.TimeWidth = TimeWidth; % 时域宽度
-            obj.P         = obj.V^2/2;
         end
         function [s,noise] = generateNS(obj,time_width, n, f0,snr,SignalType)
             t = linspace(0,time_width,n);
@@ -23,16 +22,11 @@ classdef SignalGenerator
                 s = obj.V*cos(2*pi*f0*t);
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            s = obj.zero_fill_or_transaction(s);
-            noise = obj.zero_fill_or_transaction(noise);
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateEQFM(obj,f_valley,n,band_width,time_width,snr,SignalType)
@@ -45,16 +39,11 @@ classdef SignalGenerator
                 s = obj.V*cos(2*pi*f_valley*t+pi*k*(t-T).^3);
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            s = obj.zero_fill_or_transaction(s);
-            noise = obj.zero_fill_or_transaction(noise);
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateLFM(obj,snr,f0,band_width,n,SignalType)
@@ -66,15 +55,11 @@ classdef SignalGenerator
                 s = obj.V*cos(2*pi*f0*t+pi*(band_width/time_width)*t.*t);
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            noise = wgn(1,length(s),dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
-            s = obj.zero_fill_or_transaction(s);
-            noise = obj.zero_fill_or_transaction(noise);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateBPSK(obj,Code,f,t,snr,SignalType)
@@ -95,14 +80,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateQPSK(obj,snr,Code,SignalType)
@@ -138,13 +120,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            noise = wgn(1,length(s),dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateBFSK(obj,f,Code,snr,SignalType)
@@ -166,14 +146,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateSFM(obj,ff,fmin,fmax,snr,SignalType)
@@ -184,14 +161,11 @@ classdef SignalGenerator
                 s = obj.V*vco(sin(2*pi*ff*t),[fmin,fmax],obj.fs);
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateCOSTAS(obj,snr,SignalType)
@@ -217,15 +191,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            noise = noise(1:length(s));
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateTANFM(obj,snr,SignalType)
@@ -239,14 +209,11 @@ classdef SignalGenerator
                 s = obj.V*sin(2*pi*obj.fs/(4+4*rand())*tan(2*b*t/T)/2/tan(b).*t);
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateFrank(obj,N,f,n,time_width,snr,SignalType)
@@ -268,14 +235,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateP1(obj,snr,N,SignalType)
@@ -302,14 +266,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateP2(obj,snr,SignalType)
@@ -341,14 +302,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateP3(obj,snr,SignalType)
@@ -372,14 +330,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateP4(obj,snr,SignalType)
@@ -402,14 +357,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateT1(obj,snr,f,k,n,SignalType)
@@ -427,14 +379,11 @@ classdef SignalGenerator
             if SignalType == 2
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateT2(obj,snr,f,k,n,SignalType)
@@ -452,14 +401,11 @@ classdef SignalGenerator
             if SignalType == 2
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateT3(obj,snr,f,n,SignalType)
@@ -477,14 +423,11 @@ classdef SignalGenerator
             if SignalType == 2
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateT4(obj,snr,f,n,SignalType)
@@ -502,14 +445,11 @@ classdef SignalGenerator
             if SignalType == 2
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            [~,N]= size(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateLFM_SFM(obj,snr,SignalType)
@@ -532,14 +472,11 @@ classdef SignalGenerator
                 s = obj.V*cos(phi(A,B,C,ff,f0,k,t));
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            N= length(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateEQFM_SFM(obj,snr,SignalType)
@@ -562,14 +499,11 @@ classdef SignalGenerator
                 s = obj.V*cos(phi(A,B,ff,T,f0,k,t));
                 s = HilbertTransfer(s)/sqrt(2);
             end
-            Pnoise = obj.P/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            N= length(s);
-            noise = wgn(1,N,dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateDDC_MASK(obj,snr,E,M,symbol_rate,SignalType) % 生成下变频后的MASK信号
@@ -579,7 +513,6 @@ classdef SignalGenerator
             t = linspace(0,obj.Points/symbol_nums/obj.fs,obj.Points/symbol_nums);
             d = sqrt(3*E/(M^2-1));
             s = [];
-            %% 生成无噪声下变频MASK信号
             for k = 1:symbol_nums
                 rand_sequence = randperm(M);
                 code = rand_sequence(1);
@@ -591,15 +524,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            %% 生成噪声信号
-            p = obj.getP(s);
-            Pnoise = p/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            noise = wgn(1,length(s),dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateDDC_MPSK(obj,snr,E,M,symbol_rate,SignalType) % 生成下变频后的MASK信号
@@ -609,7 +538,6 @@ classdef SignalGenerator
             t = linspace(0,obj.Points/symbol_nums/obj.fs,obj.Points/symbol_nums);
             d = sqrt(3*E/(M^2-1));
             s = [];
-            %% 生成无噪声下变频MPSK信号
             for k = 1:symbol_nums
                 rand_sequence = randperm(M);
                 m = rand_sequence(1);
@@ -621,15 +549,11 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            %% 生成噪声信号
-            p = obj.getP(s);
-            Pnoise = p/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            noise = wgn(1,length(s),dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
         function [s,noise] = generateDDC_MFSK(obj,snr,E,M,deltaf,symbol_rate,SignalType) % 生成下变频后的MASK信号
@@ -639,7 +563,6 @@ classdef SignalGenerator
             t = linspace(0,obj.Points/symbol_nums/obj.fs,obj.Points/symbol_nums);
             d = sqrt(3*E/(M^2-1));
             s = [];
-            %% 生成无噪声下变频MPSK信号
             for k = 1:symbol_nums
                 rand_sequence = randperm(M);
                 m = rand_sequence(1);
@@ -651,25 +574,21 @@ classdef SignalGenerator
                 end
             end
             s = obj.zero_fill_or_transaction(s);
-            %% 生成噪声信号
-            p = obj.getP(s);
-            Pnoise = p/10^(snr/10);
-            dBW = 10*log(Pnoise)/log(10);
-            noise = wgn(1,length(s),dBW);
-            if SignalType == 2
-                noise = HilbertTransfer(noise)/sqrt(2);
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
             end
-            obj.checkSNR(s,noise,snr);
+            noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
-        function [P] = getP(obj, s)
+        function [P] = getP(obj, s) % 获取信号s的平均功率
             E = 0; % 总能量
             for i = 1:length(s)
                 E = E + abs(s(i))^2/obj.fs;
             end
             P = E/(length(s)/obj.fs);
         end
-        function [snr]     = getSNR(obj,s,noise)
+        function [snr]     = getSNR(obj,s,noise) % 获取s+noise的信噪比
             Ps = obj.getP(s);
             Pnoise = obj.getP(noise);
             snr = 10*log(Ps/Pnoise)/log(10);
@@ -686,6 +605,16 @@ classdef SignalGenerator
             else
                 res = [s zeros(1,obj.Points-length(s))];
             end
+        end
+        function noise = getNoise(obj,s,snr,SignalType)
+            p = obj.getP(s);
+            Pnoise = p/10^(snr/10);
+            dBW = 10*log(Pnoise)/log(10);
+            noise = wgn(1,length(s),dBW);
+            if SignalType == 2
+                noise = HilbertTransfer(noise)/sqrt(2);
+            end
+            obj.checkSNR(s,noise,snr);
         end
     end
 end

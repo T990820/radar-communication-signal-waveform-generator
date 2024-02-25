@@ -22,3 +22,9 @@ Samples = 200;
 getDataset(2.1,[1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0],SignalType,SNRmin,SNRmax,SNRstep,Samples,nan);
 TimeFrequencyAnalysis("测试集",1,[224 224],1);
 Preproccess([0 0 1],["测试集"],5);
+%% 为观察无噪声情况下的Grad-CAM制作样本
+clc;clear all;
+SignalType = 2;
+getDataset(2.1, [1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0], 2, inf, 1, nan)
+TimeFrequencyAnalysis("测试集",1,[224 224],1);
+Preproccess([0 0 1],["测试集"],5);
