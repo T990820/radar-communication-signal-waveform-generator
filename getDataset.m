@@ -64,7 +64,8 @@ fs         = getParameter(param_dict, '总体', 'fs'); % sampling frequency
 n          = getParameter(param_dict, '总体', 'n');  % 默认采样点数(可覆盖)
 TimeWidth  = n / fs;                                 % 时域宽度
 v          = getParameter(param_dict, '总体', 'v');  % 信号电平
-barkers = struct('barker_5',  [1 1 1 0 1], ...              % 5位Barker码 [3]
+barkers = struct( ...
+    'barker_5',  [1 1 1 0 1], ...              % 5位Barker码 [3]
     'barker_7',  [1 1 1 0 0 1 0], ...          % 7位Barker码 [3]
     'barker_11', [1 1 1 0 0 0 1 0 0 1 0], ...  % 11位Barker码[3]
     'barker_13', [1 1 1 1 1 0 0 1 1 0 1 0 1]); % 13位Barker码[3]
@@ -257,10 +258,15 @@ end
 %% COSTAS
 if Modulations(8) == 1
     FileIndex = 1;
+    COSTAS_sequence_length_min = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_min');
+    COSTAS_sequence_length_max = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_max');
+    f_min = getParameter(param_dict, 'COSTAS', 'f_min');
+    f_max = getParameter(param_dict, 'COSTAS', 'f_max');
     for snr = SNR
         for i = 1:Samples(8)
             waitbar(GlobalIndex/samples_num,h,['COSTAS-' num2str(snr) 'dB-' num2str(i)]);
-            [s,noise] = sg.generateCOSTAS(snr,SignalType);
+            COSTAS_sequence_length = floor(COSTAS_sequence_length_min + rand() * (COSTAS_sequence_length_max - COSTAS_sequence_length_min));
+            [s,noise] = sg.generateCOSTAS(COSTAS_sequence_length,f_min,f_max,snr,SignalType);
             SaveTimeDomainSignal(Mode,s,noise,snr,snrth,'COSTAS',FileIndex,GlobalIndex,samples_num);
             FileIndex = FileIndex + 1;
             GlobalIndex = GlobalIndex + 1;

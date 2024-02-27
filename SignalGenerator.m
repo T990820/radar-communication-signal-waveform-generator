@@ -128,24 +128,16 @@ classdef SignalGenerator
             s = s+noise;
         end
         function [s,noise] = generateBFSK(obj,f,Code,snr,SignalType)
-            s = [];
+            s = zeros(1,obj.Points);
             t = linspace(0,obj.TimeWidth/length(Code),obj.Points/length(Code));
+            code_width = obj.Points/length(Code); % 每个码元的采样点数
             for j = 1:length(Code)
-                if Code(j)==0
-                    if SignalType == 1
-                        s = [s obj.V*cos(2*pi*f*t)];
-                    else
-                        s = [s HilbertTransfer(obj.V*cos(2*pi*f*t))/sqrt(2)];
-                    end
+                if SignalType == 1
+                    s((j-1)*code_width+1:j*code_width) = obj.V*cos(2*pi*(Code(j)+1)*f*t);
                 else
-                    if SignalType == 1
-                        s = [s obj.V*cos(2*pi*2*f*t)];
-                    else
-                        s = [s HilbertTransfer(obj.V*cos(2*pi*2*f*t))/sqrt(2)];
-                    end
+                    s((j-1)*code_width+1:j*code_width) = HilbertTransfer(obj.V*cos(2*pi*(Code(j)+1)*f*t))/sqrt(2);
                 end
             end
-            s = obj.zero_fill_or_transaction(s);
             if isinf(snr)
                 noise = zeros(1,length(s));
                 return
@@ -168,29 +160,25 @@ classdef SignalGenerator
             noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
-        function [s,noise] = generateCOSTAS(obj,snr,SignalType)
-            temp = randperm(5);temp = temp(1);
-            CostasArrs = getCostasArray(5);
-            arr = CostasArrs(temp,:);
-            if SignalType == 2
-                fmin = (0.05+0.1*rand())*obj.fs;
-                fmax = (0.35+0.1*rand())*obj.fs;
-            else
-                fmin = (0.05+0.05*rand())*obj.fs;
-                fmax = (0.15+0.05*rand())*obj.fs;
+        function [s,noise] = generateCOSTAS(obj,COSTAS_sequence_length,f_min,f_max,snr,SignalType)
+            if ~exist(['COSTAS n=' num2str(COSTAS_sequence_length) '.mat'],'file')
+                getCostasArray(COSTAS_sequence_length);
             end
-            fstep = (fmax-fmin)/4;
-            f = fmin+fstep*(arr-1);
-            t = 0:1/obj.fs:obj.TimeWidth/5;
-            s = [];
-            for j=1:5
+            CostasArrs = load(['COSTAS n=' num2str(COSTAS_sequence_length) '.mat']).Costas;
+            index = randi(size(CostasArrs,1),1);
+            arr = CostasArrs(index,:);
+            fstep = (f_max - f_min)/(COSTAS_sequence_length - 1);
+            f = f_min+fstep*(arr-1);
+            t = linspace(0,(obj.Points/COSTAS_sequence_length-1)/obj.fs,obj.Points/COSTAS_sequence_length);
+            s = zeros(1,obj.Points);
+            code_width = obj.Points/COSTAS_sequence_length; % 每个码元采的点数
+            for j=1:COSTAS_sequence_length
                 if SignalType == 1
-                    s = [s obj.V*cos(2*pi*f(j)*t)];
+                    s((j-1)*code_width+1:j*code_width) = obj.V*cos(2*pi*f(j)*t);
                 else
-                    s = [s HilbertTransfer(obj.V*cos(2*pi*f(j)*t))/sqrt(2)];
+                    s((j-1)*code_width+1:j*code_width) = HilbertTransfer(obj.V*cos(2*pi*f(j)*t))/sqrt(2);
                 end
             end
-            s = obj.zero_fill_or_transaction(s);
             if isinf(snr)
                 noise = zeros(1,length(s));
                 return

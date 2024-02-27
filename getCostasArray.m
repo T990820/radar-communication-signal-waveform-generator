@@ -5,9 +5,9 @@
 % 功能：获取所有长度为dim的Costas序列
 % 注意：矩阵的离散自相关函数参考自余凡著《基于分布式架构的Costas序列搜索系统的设计与实现》P7
 %      矩阵的离散自相关函数实例参考自姚建国著《Costas序列在雷达信号设计中的应用研究》P1
-function [res] = getCostasArray(dim)
-arrs = getFullPermutation(1:dim,dim);
-res  = [];
+function [] = getCostasArray(dim)
+arrs = perms(1:dim);
+Costas  = [];
 for i = 1:size(arrs,1)
     matrix = zeros(dim,dim);
     for j = 1:dim
@@ -68,46 +68,7 @@ for i = 1:size(arrs,1)
         end
     end
     if flag == true
-        res = [res;arrs(i,:)];
+        Costas = [Costas;arrs(i,:)];
     end
 end
-
-function [res] = getFullPermutation(V,N)
-narginchk(2,2) ;
-if isempty(V) || N == 0
-    M = [] ;
-elseif fix(N) ~= N || N < 1 || numel(N) ~= 1
-    error('combn:negativeN','Second argument should be a positive integer') ;
-elseif N==1
-    M = V(:).';
-else
-    if nargout<2
-        M = local_allcomb(V,N) ;
-    else
-        IND = local_allcomb(1:numel(V),N) ;
-        M = V(IND) ;
-    end
-end
-NewRows = size(M,2);
-for i = 1:size(M,1)
-    if length(M(i,:))-length(unique(M(i,:))) ~= 0
-        M(i,:) = -1 * ones(1,size(M,2));
-        NewRows = NewRows - 1;
-    end
-end
-res = zeros(NewRows,size(M,2));
-index = 1;res = [];
-for i = 1:size(M,1)
-    if sum(M(i,:) > 0)
-        res(index,:) = M(i,:);
-        index = index + 1;
-    end
-end
-
-function Y = local_allcomb(X,N)
-if N>1
-    [Y{N:-1:1}] = ndgrid(X) ;
-    Y = reshape(cat(N+1,Y{:}),[],N) ;
-else
-    Y = X(:);
-end
+save(['COSTAS n=' num2str(dim) '.mat'],'Costas')
