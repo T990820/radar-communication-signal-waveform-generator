@@ -260,8 +260,9 @@ if Modulations(8) == 1
     FileIndex = 1;
     COSTAS_sequence_length_min = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_min');
     COSTAS_sequence_length_max = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_max');
-    f_min = getParameter(param_dict, 'COSTAS', 'f_min');
-    f_max = getParameter(param_dict, 'COSTAS', 'f_max');
+    f_min = getParameter(param_dict, 'COSTAS', 'f_min')*fs;
+    f_max = getParameter(param_dict, 'COSTAS', 'f_max')*fs;
+    fprintf('params for COSTAS:\n\tcarrier frequency(fc):\t[%.2fHz, %.2fHz]\n\tcostas array length(N₀):\t[%d, %d]\n\t\n',f_min,f_max,COSTAS_sequence_length_min,COSTAS_sequence_length_max);
     for snr = SNR
         for i = 1:Samples(8)
             waitbar(GlobalIndex/samples_num,h,['COSTAS-' num2str(snr) 'dB-' num2str(i)]);
