@@ -22,14 +22,14 @@ if mode(1) == 1
     for path = paths
         all_files = getAllFiles(path);
         for i = 1:length(all_files)
-            splited_filename = strsplit(all_files{i},'.'); % 将文件名以'.'为分割符进行分解，得到的元胞数组中第2个元素是文件类型
-            if strcmp(splited_filename{2},"mat")
-                s = load(all_files{i});
-                s = s.s;
+            filename_layerout = strsplit(all_files{i},'.'); % 将文件名以'.'为分割符进行分解，得到的元胞数组中第2个元素是文件类型
+            if strcmp(filename_layerout{2},"mat")
+                fields = fieldnames(load(all_files{i})); % 获取结构体中所有的字段名称
+                s = load(all_files{i}).(cell2mat(fields(1)));
                 if ~isreal(s)
                     s = abs(s);
                 end
-                writeNPY(s,[splited_filename{1} '.npy']);
+                writeNPY(s,[filename_layerout{1} '.npy']);
                 delete(all_files{i});
             end
             index = index + 1;

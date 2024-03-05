@@ -5,6 +5,9 @@
 % 参考文献：
 %   [1] https://blog.csdn.net/qq_36320710/article/details/116742409
 function [files] = getAllFiles(inputdir)
+if ~exist(inputdir,'file')
+    error(['文件/文件夹' convertStringsToChars(inputdir) '不存在！']);
+end
 files=cell(0);
 dirs = dir(inputdir);
 for i=1:length(dirs)

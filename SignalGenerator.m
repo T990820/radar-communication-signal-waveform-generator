@@ -569,6 +569,30 @@ classdef SignalGenerator
             noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
+        function [s, noise] = generateMQAM(obj,snr,SignalType,M,code,fc)
+            if mod(length(code), length(dec2bin(M-1))) ~= 0
+                error([num2str(M) 'QAM需要' num2str(length(dec2bin(M-1))) '个二进制数来表示一个符号，而出入的码元数量不能被' num2str(length(dec2bin(M-1))) '整除']);
+            end
+            constellation = qammod(0:M-1,M);
+            symbol_num = length(code)/length(dec2bin(M-1)); % 符号数量
+            symbol_width = obj.Points / obj.fs / symbol_num; % 每个符号的时域宽度
+            s = [];
+            for i = 1:symbol_num
+                t = linspace(0, symbol_width, obj.Points / symbol_num);
+                symbol = bin2dec(num2str(code((i-1)*symbol_num+1:i*symbol_num)));
+                s_temp = real(exp(1i*2*pi*fc*t)*constellation(symbol)); 
+                if SignalType == 2
+                    s_temp = HilbertTransfer(s_temp);
+                end
+                s = [s s_temp];
+            end
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
+            end
+            noise = obj.getNoise(s,snr,SignalType);
+            s = s+noise;
+        end
         function [P] = getP(obj, s) % 获取信号s的平均功率
             E = 0; % 总能量
             for i = 1:length(s)

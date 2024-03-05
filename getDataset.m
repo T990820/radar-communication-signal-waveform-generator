@@ -521,6 +521,21 @@ if Modulations(23) == 1
         end
     end
 end
+%% MQAM
+if Modulations(23) == 1
+    for M = M_for_DDC_MFSK
+        FileIndex = 1;
+        for snr = SNR
+            for i = 1:Samples(21)
+                waitbar(GlobalIndex/samples_num,h,[num2str(M) 'QAM-' num2str(snr) 'dB-' num2str(i)]);
+                [s,noise] = sg.generateMQAM();
+                SaveTimeDomainSignal(Mode,s,noise,snr,snrth,[num2str(M) 'QAM'],FileIndex,GlobalIndex,samples_num);
+                FileIndex = FileIndex + 1;
+                GlobalIndex = GlobalIndex + 1;
+            end
+        end
+    end
+end
 delete(h);close all;
 assert(GlobalIndex==samples_num, "样本个数计算不正确！")
 end

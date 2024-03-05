@@ -1,9 +1,15 @@
 function getSingularValueEntropy(paths)
-for path = paths
+h = waitbar(0,'Initializing','name','Starting SVD Analysis ...');
+index = 0;
+file_nums = 0; % paths中全部文件的数量
+for path = paths % 获取全部文件的数量并判断文件/文件夹是否存在
     if ~exist(path,'file')
         error(['文件/文件夹' path '不存在！']);
     end
-    if ~isfolder(path)
+    file_nums = file_nums + length(getAllFiles(path));
+end
+for path = paths
+    if ~isfolder(path) % 获取path文件夹下所有文件的绝对路径
         all_file_paths = path;
     else
         all_file_paths = getAllFiles(path);
@@ -19,6 +25,8 @@ for path = paths
         filename_layerout = strsplit(file_path,'.');
         save([filename_layerout{1} '.mat'],'singular_value_entropy');
         delete(file_path);
+        index = index + 1;
+        waitbar(index/file_nums,h,['generating ' num2str(index) '/' num2str(file_nums) ' singular value entropy']);
     end
 end
 end
