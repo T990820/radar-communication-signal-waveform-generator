@@ -522,7 +522,7 @@ if Modulations(23) == 1
     end
 end
 %% MQAM
-if Modulations(23) == 1
+if Modulations(24) == 1
     for M = M_for_DDC_MFSK
         FileIndex = 1;
         for snr = SNR
