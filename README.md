@@ -1,7 +1,7 @@
 # 雷达/通信信号波形发生与特征提取代码
 &emsp;&emsp;本仓库的代码用于雷达/通信信号波形的仿真与特征提取，各个函数的用法如下所示。
 ## getDataset
-&emsp;&emsp;getDataset函数有如下的2种调用形式。
+&emsp;&emsp;getDataset函数用于生成特定信噪比范围内的时域采样信号，有如下的2种调用形式。
 ```matlab
 getDataset(Mode, Modulations, SignalType, SNRmin, SNRmax, SNRstep, Samples, snrth);
 getDataset(Mode, Modulations, SignalType, SNR, Samples, snrth);
