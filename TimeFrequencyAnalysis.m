@@ -39,6 +39,9 @@ elseif mode == 3
     for i = 1:length(files)
         s = load(files{i}).('s');
         img = CTFD(s);
+        if ~isnan(Shape)
+            img = imresize(img,Shape);
+        end
         split_files = strsplit(files{i},'.');
         imwrite(img,[split_files{1} '.jpg']);
         waitbar(i/length(files),h,['正在生成第' num2str(i) '/' num2str(length(files)) '张CTFD时频图像']);
