@@ -18,7 +18,7 @@
 %       Mode = 5:   为噪声估计网络的训练集生成时域信号
 %   SNRmin：信噪比的最小值
 %   SNRmax：信噪比的最大值
-%   Modulations: 23 elements represents NS, EQFM, LFM, BPSK, QPSK, BFSK, SFM, COSTAS, TANFM, FRANK, P1, P2, P3, P4, T1, T2, T3, T4, LFM-SFM, EQFM-SFM, DDC-MASK, DDC-MPSK, DDC-MFSK respectively. 1 means generate, 0 means do not generate
+%   Modulations: 25 elements represents NS, EQFM, LFM, VTFM, BPSK, QPSK, BFSK, SFM, COSTAS, TANFM, FRANK, P1, P2, P3, P4, T1, T2, T3, T4, LFM-SFM, EQFM-SFM, DDC-MASK, DDC-MPSK, DDC-MFSK, MQAM respectively. 1 means generate, 0 means do not generate
 % Reference:
 %   [1] https://www.radartutorial.eu/08.transmitters/Frank%20Code.en.html
 %   [2] J. E. Fielding, "Polytime coding as a means of pulse compression," in IEEE Transactions on Aerospace and Electronic Systems, vol. 35, no. 2, pp. 716-721, April 1999, doi: 10.1109/7.766951.
@@ -163,8 +163,28 @@ if Modulations(3) == 1
         end
     end
 end
-%% BPSK
+%% VTFM
 if Modulations(4) == 1
+    FileIndex = 1;
+    f0_min = getParameter(param_dict, 'VTFM', 'f0_min');
+    f0_max = getParameter(param_dict, 'VTFM', 'f0_max');
+    band_width_min = getParameter(param_dict, 'VTFM', 'band_width_min');
+    band_width_max = getParameter(param_dict, 'VTFM', 'band_width_max');
+    fprintf('params for VTFM:\n\tinitial frequency(f0):\t[%.2fHz, %.2fHz]\n\tband width(B):\t\t\t[%.2fHz, %.2fHz]\n',f0_min*fs,f0_max*fs,band_width_min*fs,band_width_max*fs);
+    for snr = SNR
+        for i = 1:Samples(4)
+            waitbar(GlobalIndex/samples_num,h,['VTFM-' num2str(snr) 'dB-' num2str(i)]);
+            f0 = (f0_min+(f0_max-f0_min)*rand())*fs;                                        % 起始频率
+            band_width = (band_width_min + (band_width_max - band_width_min) * rand()) *fs; % 频域宽度
+            [s,noise] = sg.generateVTFM(snr,f0,band_width,SignalType);
+            SaveTimeDomainSignal(Mode,s,noise,snr,snrth,'VTFM',FileIndex,GlobalIndex,samples_num);
+            FileIndex = FileIndex + 1;
+            GlobalIndex = GlobalIndex + 1;
+        end
+    end
+end
+%% BPSK
+if Modulations(5) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'BPSK', 'fc_min');
     fc_max = getParameter(param_dict, 'BPSK', 'fc_max');
@@ -189,7 +209,7 @@ if Modulations(4) == 1
     end
 end
 %% QPSK
-if Modulations(5) == 1
+if Modulations(6) == 1
     FileIndex = 1;
     code = [0 0 0 0 0 0 0 0 ...
         0 0 0 1 1 0 1 1 ...
@@ -206,7 +226,7 @@ if Modulations(5) == 1
     end
 end
 %% BFSK
-if Modulations(6) == 1
+if Modulations(7) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'BFSK', 'fc_min');
     fc_max = getParameter(param_dict, 'BFSK', 'fc_max');
@@ -236,7 +256,7 @@ if Modulations(6) == 1
     end
 end
 %% SFM
-if Modulations(7) == 1
+if Modulations(8) == 1
     FileIndex = 1;
     f_peak_min = getParameter(param_dict, 'SFM', 'f_peak_min');
     f_peak_max = getParameter(param_dict, 'SFM', 'f_peak_max');
@@ -256,7 +276,7 @@ if Modulations(7) == 1
     end
 end
 %% COSTAS
-if Modulations(8) == 1
+if Modulations(9) == 1
     FileIndex = 1;
     COSTAS_sequence_length_min = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_min');
     COSTAS_sequence_length_max = getParameter(param_dict, 'COSTAS', 'COSTAS_sequence_length_max');
@@ -275,7 +295,7 @@ if Modulations(8) == 1
     end
 end
 %% TANFM
-if Modulations(9) == 1
+if Modulations(10) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(9)
@@ -288,7 +308,7 @@ if Modulations(9) == 1
     end
 end
 %% Frank[1]
-if Modulations(10) == 1
+if Modulations(11) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'FRANK', 'fc_min');
     fc_max = getParameter(param_dict, 'FRANK', 'fc_max');
@@ -311,7 +331,7 @@ if Modulations(10) == 1
     end
 end
 %% P1
-if Modulations(11) == 1
+if Modulations(12) == 1
     FileIndex = 1;
     N_min = getParameter(param_dict, 'P1', 'N_min');
     N_max = getParameter(param_dict, 'P1', 'N_max');
@@ -327,7 +347,7 @@ if Modulations(11) == 1
     end
 end
 %% P2
-if Modulations(12) == 1
+if Modulations(13) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(12)
@@ -340,7 +360,7 @@ if Modulations(12) == 1
     end
 end
 %% P3
-if Modulations(13) == 1
+if Modulations(14) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(13)
@@ -353,7 +373,7 @@ if Modulations(13) == 1
     end
 end
 %% P4
-if Modulations(14) == 1
+if Modulations(15) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(14)
@@ -366,7 +386,7 @@ if Modulations(14) == 1
     end
 end
 %% T1[2]
-if Modulations(15) == 1
+if Modulations(16) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'T1', 'fc_min');
     fc_max = getParameter(param_dict, 'T1', 'fc_max');
@@ -388,7 +408,7 @@ if Modulations(15) == 1
     end
 end
 %% T2[2]
-if Modulations(16) == 1
+if Modulations(17) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'T2', 'fc_min');
     fc_max = getParameter(param_dict, 'T2', 'fc_max');
@@ -410,7 +430,7 @@ if Modulations(16) == 1
     end
 end
 %% T3[2]
-if Modulations(17) == 1
+if Modulations(18) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'T3', 'fc_min');
     fc_max = getParameter(param_dict, 'T3', 'fc_max');
@@ -429,7 +449,7 @@ if Modulations(17) == 1
     end
 end
 %% T4[2]
-if Modulations(18) == 1
+if Modulations(19) == 1
     FileIndex = 1;
     fc_min = getParameter(param_dict, 'T4', 'fc_min');
     fc_max = getParameter(param_dict, 'T4', 'fc_max');
@@ -448,7 +468,7 @@ if Modulations(18) == 1
     end
 end
 %% LFM-SFM
-if Modulations(19) == 1
+if Modulations(20) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(19)
@@ -461,7 +481,7 @@ if Modulations(19) == 1
     end
 end
 %% EQFM-SFM
-if Modulations(20) == 1
+if Modulations(21) == 1
     FileIndex = 1;
     for snr = SNR
         for i = 1:Samples(20)
@@ -474,7 +494,7 @@ if Modulations(20) == 1
     end
 end
 %% DDC_MASK
-if Modulations(21) == 1
+if Modulations(22) == 1
     for M = M_for_DDC_MASK
         FileIndex = 1;
         for snr = SNR
@@ -490,7 +510,7 @@ if Modulations(21) == 1
     end
 end
 %% DDC_MPSK
-if Modulations(22) == 1
+if Modulations(23) == 1
     for M = M_for_DDC_MPSK
         FileIndex = 1;
         for snr = SNR
@@ -506,7 +526,7 @@ if Modulations(22) == 1
     end
 end
 %% DDC_MFSK
-if Modulations(23) == 1
+if Modulations(24) == 1
     for M = M_for_DDC_MFSK
         FileIndex = 1;
         for snr = SNR
@@ -522,7 +542,7 @@ if Modulations(23) == 1
     end
 end
 %% MQAM
-if Modulations(24) == 1
+if Modulations(25) == 1
     for M = M_for_DDC_MFSK
         FileIndex = 1;
         for snr = SNR

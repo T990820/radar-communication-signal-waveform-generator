@@ -62,6 +62,32 @@ classdef SignalGenerator
             noise = obj.getNoise(s,snr,SignalType);
             s = s+noise;
         end
+        function [s,noise] = generateVTFM(obj,snr,f0,band_width,SignalType)
+            % 频率上升沿
+            time_width = obj.Points / obj.fs / 2; % 时域宽度
+            t = linspace(0, time_width, obj.Points / 2);
+            if SignalType == 1
+                s1 = obj.V*cos(2*pi*f0*t+pi*(band_width/time_width)*t.*t); % 频率上升沿的时域信号
+            else
+                s1 = obj.V*cos(2*pi*f0*t+pi*(band_width/time_width)*t.*t);
+                s1 = HilbertTransfer(s1)/sqrt(2);
+            end
+            fmax = f0 + band_width;
+            % 频率下降沿
+            if SignalType == 1
+                s2 = obj.V*cos(2*pi*fmax*t-pi*(band_width/time_width)*t.*t); % 频率上升沿的时域信号
+            else
+                s2 = obj.V*cos(2*pi*fmax*t-pi*(band_width/time_width)*t.*t);
+                s2 = HilbertTransfer(s2)/sqrt(2);
+            end
+            s = [s1 s2];
+            if isinf(snr)
+                noise = zeros(1,length(s));
+                return
+            end
+            noise = obj.getNoise(s,snr,SignalType);
+            s = s+noise;
+        end
         function [s,noise] = generateBPSK(obj,Code,f,t,snr,SignalType)
             s = [];
             for j = 1:length(Code)
