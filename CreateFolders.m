@@ -56,14 +56,14 @@ elseif Mode == 2
     for i = SNR
         for j = 1:length(Modulations)
             if Modulations(j) == 1
-                mkdir(['测试集\\Image' num2str(i) 'dB\\' ModulationsStruct.(char('a'+j-1))]);
+                mkdir(['测试集\\' num2str(i) 'dB\\' ModulationsStruct.(char('a'+j-1))]);
             end
         end
     end
-elseif Mode == 2.1
+elseif Mode == 2.1 || Mode == 6
     mkdir('测试集');
     for i = SNR
-        mkdir(['测试集\\Image' num2str(i) 'dB\\']);
+        mkdir(['测试集\\' num2str(i) 'dB\\']);
     end
 elseif Mode == 3
     mkdir("Pure\\");mkdir("Dirty\\");mkdir("Noise\\");

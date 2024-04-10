@@ -632,7 +632,7 @@ classdef SignalGenerator
             snr = 10*log(Ps/Pnoise)/log(10);
         end
         function []        = checkSNR(obj,s,noise,snr)
-            if abs(obj.getSNR(s,noise)-snr)>0.5
+            if abs(obj.getSNR(s,noise)-snr)>0.1
                 warning("信噪比偏差过大，请重新检查代码");
             end
         end

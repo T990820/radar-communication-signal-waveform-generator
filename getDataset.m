@@ -16,6 +16,7 @@
 %       Mode = 3:   为图像去噪网络的训练集生成时域信号
 %       Mode = 4:   为图像去噪网络的测试集生成时域信号
 %       Mode = 5:   为噪声估计网络的训练集生成时域信号
+%       Mode = 6:   为噪声估计网络的测试集生成时域信号
 %   SNRmin：信噪比的最小值
 %   SNRmax：信噪比的最大值
 %   Modulations: 25 elements represents NS, EQFM, LFM, VTFM, BPSK, QPSK, BFSK, SFM, COSTAS, TANFM, FRANK, P1, P2, P3, P4, T1, T2, T3, T4, LFM-SFM, EQFM-SFM, DDC-MASK, DDC-MPSK, DDC-MFSK, MQAM respectively. 1 means generate, 0 means do not generate

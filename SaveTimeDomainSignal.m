@@ -18,10 +18,10 @@ elseif mode == 1.1
     file_name = sprintf(['%0' num2str(file_path_length) 's'],num2str(global_index));
     save(['训练集\' modulation '_' file_name '.mat'],"s");
 elseif mode == 2
-    save(['测试集\\Image' num2str(snr) 'dB\\' modulation '\\' num2str(file_index) '.mat'],"s")
-elseif mode == 2.1
+    save(['测试集\\' num2str(snr) 'dB\\' modulation '\\' num2str(file_index) '.mat'],"s")
+elseif mode == 2.1 || mode == 6
     file_name = sprintf(['%0' num2str(file_path_length) 's'],num2str(global_index));
-    save(['测试集\\Image' num2str(snr) 'dB\\' modulation '_' file_name '.mat'],"s");
+    save(['测试集\\' num2str(snr) 'dB\\' modulation '_' file_name '.mat'],"s");
 elseif mode == 3
     file_name = sprintf(['%0' num2str(file_path_length) 's'],num2str(global_index));
     s = signal - noise;
@@ -45,4 +45,3 @@ elseif mode == 5
         save(['训练集\\高噪声水平\\' num2str(global_index) '.mat'],"s")
     end
 end
-
