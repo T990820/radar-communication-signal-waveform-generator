@@ -48,7 +48,18 @@ warning ('off', 'all');
 if size(Samples,1)==1 && size(Samples,2)==1 % 如果Samples是个数而不是矩阵，则将其拓展为向量
     Samples = ones(1,length(Modulations))*Samples;
 end
+all_modulations = {"NS", "EQFM", "LFM", "VTFM", "BPSK", "QPSK", "BFSK", "SFM", "COSTAS", "TANFM", ...
+                   "FRANK", "P1", "P2", "P3", "P4", "T1", "T2", "T3", "T4", "LFM-SFM", ...
+                   "EQFM-SFM", "DDC-MASK", "DDC-MPSK", "DDC-MFSK", "MQAM"};
+disp('Modulations to be generated:')
+fprintf('\n\t')
+for i = 1:length(Modulations)
+    if Modulations(i) == 1
+        fprintf('%s\t', all_modulations{1,i});
+    end
+end
 AllFiles = dir(pwd);
+fprintf('\n')
 disp("deleting existing folders ...");
 for i = 3:length(AllFiles) % delete all generated folders
     if length(AllFiles(i).name) <= 2
