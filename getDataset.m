@@ -25,6 +25,7 @@
 %   [2] J. E. Fielding, "Polytime coding as a means of pulse compression," in IEEE Transactions on Aerospace and Electronic Systems, vol. 35, no. 2, pp. 716-721, April 1999, doi: 10.1109/7.766951.
 %   [3] https://www.radartutorial.eu/08.transmitters/Barker%20Code.en.html
 function [] = getDataset(varargin)
+addpath("tftb-0.2\mfiles\");
 disp("generating time domain signal ...");
 if nargin == 8
     Mode = varargin{1};

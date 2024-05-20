@@ -6,6 +6,7 @@ function [] = TimeFrequencyAnalysis(folder,mode,Shape,delete_mat)
 %       mode = 1: 对folder内的雷达时域信号做STFT
 %       mode = 2: 求folder内的雷达时域信号的CWD
 %       mode = 3: 求folder内的雷达时域信号的CTFD
+addpath("tftb-0.2\mfiles\");
 h     = waitbar(0,'Initializing','name','Time-Frequency Analysis');
 files = getAllFiles(folder);
 param_dict = getParameterDict("信号参数.xlsx");
