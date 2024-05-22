@@ -1,3 +1,4 @@
+% 分析paths路径下所有图像的奇异值熵
 function getSingularValueEntropy(paths)
 h = waitbar(0,'Initializing','name','Starting SVD Analysis ...');
 index = 0;

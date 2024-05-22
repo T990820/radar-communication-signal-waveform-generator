@@ -1,4 +1,4 @@
-% 读取信号参数.xlsx中
+% 读取信号参数.xlsx中modulation调制方式的参数key
 function param = getParameter(dict, modulation, key)
 for i = 1:size(dict,1)
     if strcmp(dict{i,1}, modulation) && strcmp(dict{i,2}, key)
