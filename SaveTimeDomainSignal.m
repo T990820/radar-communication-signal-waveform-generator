@@ -7,12 +7,13 @@ function [] = SaveTimeDomainSignal(mode,signal,noise,snr,snrth,modulation,file_i
 %       mode = 3:   为图像去噪网络的训练集生成时域信号
 %       mode = 4:   为图像去噪网络的测试集生成时域信号
 %       mode = 5:   为噪声估计网络的训练集生成时域信号
+%       Mode = 7:   为复合调制信号识别任务的训练集生成时域信号，并将每个类的样本存到单独的文件夹中
 %   modulation
 %       字符串类型变量，表示signal的调制方式
 %   file_nums：文件的总数，用来给文件名前补0
 s = signal;
 file_path_length = length(num2str(file_nums)); % 文件名的长度
-if mode == 1
+if mode == 1 || mode == 7
     save(['训练集\\' modulation '\\' num2str(file_index) '.mat'],"s")
 elseif mode == 1.1
     file_name = sprintf(['%0' num2str(file_path_length) 's'],num2str(global_index));
