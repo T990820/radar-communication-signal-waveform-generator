@@ -33,7 +33,7 @@ if Mode == 1 || Mode == 7
     end
 elseif Mode == 1.1
     mkdir('训练集\');
-elseif Mode == 2
+elseif Mode == 2 || Mode == 8
     mkdir('测试集');
     for i = SNR
         for j = 1:length(Modulations)

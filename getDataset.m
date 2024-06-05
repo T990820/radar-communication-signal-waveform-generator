@@ -17,7 +17,8 @@
 %       Mode = 4:   为图像去噪网络的测试集生成时域信号
 %       Mode = 5:   为噪声估计网络的训练集生成时域信号
 %       Mode = 6:   为噪声估计网络的测试集生成时域信号
-%       Mode = 7:   为复合调制信号识别任务的训练集生成时域信号，并将每个类的样本存到单独的文件夹中
+%       Mode = 7:   为多分量调制信号识别任务的训练集生成时域信号，并将每个类的样本存到单独的文件夹中
+%       Mode = 8:   为多分量调制信号识别任务的测试集生成时域信号，并将每个类的样本存到单独的文件夹中
 %   SNRmin：信噪比的最小值
 %   SNRmax：信噪比的最大值
 %   Modulations: 25 elements represents NS, EQFM, LFM, VTFM, BPSK, QPSK, BFSK, SFM, COSTAS, TANFM, FRANK, P1, P2, P3, P4, T1, T2, T3, T4, LFM-SFM, EQFM-SFM, DDC-MASK, DDC-MPSK, DDC-MFSK, MQAM respectively. 1 means generate, 0 means do not generate
@@ -567,5 +568,5 @@ if Modulations(25) == 1
 end
 delete(h);close all;
 assert(GlobalIndex==samples_num, "样本个数计算不正确！")
-getMultiComponentSignal(Mode,Modulations);
+getMultiComponentSignal(Mode,Modulations,SNRmin:SNRstep:SNRmax);
 end
