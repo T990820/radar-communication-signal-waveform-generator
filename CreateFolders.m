@@ -57,4 +57,12 @@ elseif Mode == 4
     end
 elseif Mode == 5
     mkdir('训练集');mkdir('训练集\\低噪声水平');mkdir('训练集\\高噪声水平');
+elseif Mode == 9
+    for i = 1:length(Modulations)
+        if Modulations(i) == 1
+            mkdir(['Dirty\' convertStringsToChars(all_modulations{i})])
+            mkdir(['Pure\' convertStringsToChars(all_modulations{i})])
+            mkdir(['Noise\' convertStringsToChars(all_modulations{i})])
+        end
+    end
 end

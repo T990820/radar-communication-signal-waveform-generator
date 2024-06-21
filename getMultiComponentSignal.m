@@ -21,13 +21,32 @@ switch Mode
                 for j = i+1 : length(Modulations)
                     if Modulations(i) == 1 && Modulations(j) == 1
                         addSingleComponentSignals(['测试集\' num2str(snr) 'dB\' convertStringsToChars(all_modulations{i})], ...
-                        ['测试集\' num2str(snr) 'dB\' convertStringsToChars(all_modulations{j})], ...
-                        ['测试集\' num2str(snr) 'dB\' convertStringsToChars(all_modulations{i}) '+' convertStringsToChars(all_modulations{j})]);
+                            ['测试集\' num2str(snr) 'dB\' convertStringsToChars(all_modulations{j})], ...
+                            ['测试集\' num2str(snr) 'dB\' convertStringsToChars(all_modulations{i}) '+' convertStringsToChars(all_modulations{j})]);
                     end
                 end
             end
             deleteSingleComponentSignals(['测试集\' num2str(snr) 'dB\']);
         end
+    case 9
+        for i = 1 : length(Modulations)
+            for j = i+1 : length(Modulations)
+                if Modulations(i) == 1 && Modulations(j) == 1
+                    addSingleComponentSignals(['Dirty\' convertStringsToChars(all_modulations{i})], ...
+                        ['Dirty\' convertStringsToChars(all_modulations{j})], ...
+                        ['Dirty\' convertStringsToChars(all_modulations{i}) '+' convertStringsToChars(all_modulations{j})]);
+                    addSingleComponentSignals(['Pure\' convertStringsToChars(all_modulations{i})], ...
+                        ['Pure\' convertStringsToChars(all_modulations{j})], ...
+                        ['Pure\' convertStringsToChars(all_modulations{i}) '+' convertStringsToChars(all_modulations{j})]);
+                    addSingleComponentSignals(['Noise\' convertStringsToChars(all_modulations{i})], ...
+                        ['Noise\' convertStringsToChars(all_modulations{j})], ...
+                        ['Noise\' convertStringsToChars(all_modulations{i}) '+' convertStringsToChars(all_modulations{j})]);
+                end
+            end
+        end
+        deleteSingleComponentSignals('Noise');
+        deleteSingleComponentSignals('Pure');
+        deleteSingleComponentSignals('Dirty');
     otherwise
         return
 end
