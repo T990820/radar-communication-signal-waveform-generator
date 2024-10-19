@@ -49,9 +49,9 @@ elseif mode == 5
 elseif mode == 9
     file_name = sprintf(['%0' num2str(file_path_length) 's'],num2str(global_index));
     s = signal - noise;
-    save(['Pure\\' modulation '\\' modulation '_' file_name '.mat'], "s")
+    save(['Pure\\' modulation '\\' file_name '_' modulation '.mat'], "s")
     s = signal;
-    save(['Dirty\\' modulation '\\' modulation '_' file_name '.mat'],"s")
+    save(['Dirty\\' modulation '\\' file_name '_' modulation '.mat'],"s")
     s = noise;
-    save(['Noise\\' modulation '\\' modulation '_' file_name '.mat'],"s")
+    save(['Noise\\' modulation '\\' file_name '_' modulation '.mat'],"s")
 end

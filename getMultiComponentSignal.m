@@ -58,11 +58,16 @@ mkdir(destination_folder);
 all_i_signals = dir(i_source_folder);
 all_j_signals = dir(j_source_folder);
 assert(length(all_i_signals) == length(all_j_signals), "两单分量信号样本个数不一致！")
+file_path_length = length(num2str(length(all_i_signals))); % 文件名的长度
 for k = 3:length(all_i_signals)
     i_signal = load([all_i_signals(k).folder '\' all_i_signals(k).name]).('s');
     j_signal = load([all_j_signals(k).folder '\' all_j_signals(k).name]).('s');
     s = i_signal + j_signal;
-    save([destination_folder '\' num2str(file_index) '.mat'],"s");
+    % 文件名的格式是00032_LFM+SFM.mat
+    file_name_index = sprintf(['%0' num2str(file_path_length) 's'],num2str(file_index)); % 文件名的数字部分
+    file_name_modulation = split(destination_folder,'\');
+    file_name_modulation = file_name_modulation{2};
+    save([destination_folder '\' file_name_index '_' file_name_modulation '.mat'],"s");
     file_index = file_index + 1;
 end
 end
